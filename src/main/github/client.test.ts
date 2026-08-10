@@ -215,7 +215,7 @@ describe('checkOrcaStarred', () => {
 
     expect(execFileAsyncMock).toHaveBeenCalledWith(
       'gh',
-      ['api', '--include', 'user/starred/stablyai/orca'],
+      ['api', '--include', 'user/starred/terddyy/ImogenAI'],
       { encoding: 'utf-8' }
     )
   })
