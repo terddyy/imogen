@@ -47,6 +47,18 @@ describe('getRequiredReleaseAssetNames', () => {
       ])
     )
   })
+
+  it('includes unsigned Imogen macOS DMGs', () => {
+    expect(getRequiredReleaseAssetNames('v1.4.27')).toEqual(
+      expect.arrayContaining([
+        'latest-mac.yml',
+        'imogen-macos-arm64.dmg',
+        'imogen-macos-arm64.dmg.blockmap',
+        'imogen-macos-x64.dmg',
+        'imogen-macos-x64.dmg.blockmap'
+      ])
+    )
+  })
 })
 
 describe('extractManifestAssetNames', () => {
@@ -55,12 +67,12 @@ describe('extractManifestAssetNames', () => {
       extractManifestAssetNames(
         [
           'files:',
-          '  - url: Orca-1.4.27-arm64-mac.zip',
+          '  - url: ImogenAI-1.4.27-arm64-mac.zip',
           '  - url: https://example.com/downloads/imogen-windows-setup.exe',
           'path: orca-linux.AppImage'
         ].join('\n')
       )
-    ).toEqual(['Orca-1.4.27-arm64-mac.zip', 'imogen-windows-setup.exe', 'orca-linux.AppImage'])
+    ).toEqual(['ImogenAI-1.4.27-arm64-mac.zip', 'imogen-windows-setup.exe', 'orca-linux.AppImage'])
   })
 })
 
