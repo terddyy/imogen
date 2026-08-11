@@ -56,11 +56,11 @@ describe('extractManifestAssetNames', () => {
         [
           'files:',
           '  - url: Orca-1.4.27-arm64-mac.zip',
-          '  - url: https://example.com/downloads/orca-windows-setup.exe',
+          '  - url: https://example.com/downloads/imogen-windows-setup.exe',
           'path: orca-linux.AppImage'
         ].join('\n')
       )
-    ).toEqual(['Orca-1.4.27-arm64-mac.zip', 'orca-windows-setup.exe', 'orca-linux.AppImage'])
+    ).toEqual(['Orca-1.4.27-arm64-mac.zip', 'imogen-windows-setup.exe', 'orca-linux.AppImage'])
   })
 })
 
