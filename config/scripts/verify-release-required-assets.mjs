@@ -16,8 +16,8 @@ export function getRequiredReleaseAssetNames(tag) {
     `orca-ide_${version}_arm64.deb`,
     `orca-ide-${version}.x86_64.rpm`,
     `orca-ide-${version}.aarch64.rpm`,
-    'orca-windows-setup.exe',
-    'orca-windows-setup.exe.blockmap'
+    'imogen-windows-setup.exe',
+    'imogen-windows-setup.exe.blockmap'
   ]
 }
 
