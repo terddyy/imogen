@@ -27,7 +27,9 @@ jobs:
     # Why: this workflow is outside the SignPath signing run, so Blacksmith
     # cannot enter Windows artifact provenance while mac notarization gets the
     # faster runner.
-    runs-on: blacksmith-6vcpu-macos-15
+    # Use a GitHub-hosted runner for release reliability. Blacksmith can remain
+    # unavailable for hours while the outer release workflow waits and times out.
+    runs-on: macos-14
     timeout-minutes: 60
     env:
       NODE_OPTIONS: --max-old-space-size=4096
