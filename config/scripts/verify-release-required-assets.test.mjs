@@ -34,17 +34,6 @@ afterEach(() => {
 })
 
 describe('getRequiredReleaseAssetNames', () => {
-  it('includes both mac updater ZIP names for the tag version', () => {
-    expect(getRequiredReleaseAssetNames('v1.4.27')).toEqual(
-      expect.arrayContaining([
-        'Orca-1.4.27-mac.zip',
-        'Orca-1.4.27-mac.zip.blockmap',
-        'Orca-1.4.27-arm64-mac.zip',
-        'Orca-1.4.27-arm64-mac.zip.blockmap'
-      ])
-    )
-  })
-
   it('includes x64 and arm64 Linux assets', () => {
     expect(getRequiredReleaseAssetNames('v1.4.27')).toEqual(
       expect.arrayContaining([
@@ -79,30 +68,20 @@ describe('verifyRequiredReleaseAssets', () => {
   it('fails when a manifest-referenced asset has not been uploaded', async () => {
     const tag = 'v1.4.27'
     const required = getRequiredReleaseAssetNames(tag)
-    const assets = required.filter((name) => name !== 'Orca-1.4.27-arm64-mac.zip')
+    const assets = required.filter((name) => name !== 'orca-linux-arm64.AppImage')
     const release = releaseWithAssets(tag, assets)
-    const latestMacAsset = release.assets.find((asset) => asset.name === 'latest-mac.yml')
+    const latestLinuxAsset = release.assets.find((asset) => asset.name === 'latest-linux.yml')
     const fetchMock = vi
       .fn()
       .mockResolvedValueOnce(jsonResponse([release]))
-      .mockResolvedValueOnce(
-        jsonResponse(
-          [
-            'version: 1.4.27',
-            'files:',
-            '  - url: Orca-1.4.27-arm64-mac.zip',
-            '    sha512: test',
-            'path: Orca-1.4.27-arm64-mac.zip'
-          ].join('\n')
-        )
-      )
+      .mockResolvedValueOnce(jsonResponse('version: 1.4.27\n'))
       .mockResolvedValue(jsonResponse('version: 1.4.27\n'))
     vi.stubGlobal('fetch', fetchMock)
 
     await expect(
       verifyRequiredReleaseAssets({ repo: 'stablyai/orca', tag, token: 'token' })
-    ).rejects.toThrow('Missing: Orca-1.4.27-arm64-mac.zip')
-    expect(latestMacAsset).toBeTruthy()
+    ).rejects.toThrow('Missing: orca-linux-arm64.AppImage')
+    expect(latestLinuxAsset).toBeTruthy()
   })
 
   it('checks assets referenced by the Linux arm64 updater manifest', async () => {
