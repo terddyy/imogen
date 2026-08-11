@@ -6,10 +6,14 @@ export function resolveDownload({ userAgent = '', platform = '', architecture = 
   const device = `${platform} ${userAgent}`.toLowerCase()
   const arm = /arm|aarch/.test(`${architecture} ${device}`)
 
-  if (/android|iphone|ipad|ipod/.test(device)) return null
-  if (/windows|win32|win64/.test(device)) return target('orca-windows-setup.exe', 'Windows')
+  if (/android|iphone|ipad|ipod/.test(device)) {
+    return null
+  }
+  if (/windows|win32|win64/.test(device)) {
+    return target('imogen-windows-setup.exe', 'Windows')
+  }
   if (/mac|darwin/.test(device)) {
-    return target(arm ? 'orca-macos-arm64.dmg' : 'orca-macos-x64.dmg', 'macOS')
+    return target(arm ? 'imogen-macos-arm64.dmg' : 'imogen-macos-x64.dmg', 'macOS')
   }
   if (/linux|x11/.test(device)) {
     return target(arm ? 'orca-linux-arm64.AppImage' : 'orca-linux.AppImage', 'Linux')
@@ -18,7 +22,9 @@ export function resolveDownload({ userAgent = '', platform = '', architecture = 
 }
 
 function applyDownload(target) {
-  if (!target) return
+  if (!target) {
+    return
+  }
 
   for (const link of document.querySelectorAll('a[href$="/releases/latest"]')) {
     link.href = target.url
@@ -50,4 +56,6 @@ async function detectDownload() {
   }
 }
 
-if (typeof document !== 'undefined') void detectDownload()
+if (typeof document !== 'undefined') {
+  void detectDownload()
+}
