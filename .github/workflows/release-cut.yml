@@ -1824,41 +1824,10 @@ jobs:
       - name: Verify telemetry constants present in app.asar
         run: node config/scripts/verify-telemetry-constants.mjs
 
-  build-mac:
-    needs:
-      - cut
-      - create-release
-    if: needs.cut.outputs.should_release == 'true'
-    # Why: SignPath requires every job in this signing workflow to be
-    # GitHub-hosted. The actual mac build runs in release-mac-build.yml so
-    # Blacksmith stays outside Windows artifact provenance.
-    runs-on: ubuntu-latest
-    permissions:
-      actions: write
-      contents: read
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version-file: package.json
-
-      - name: Run isolated macOS release build
-        run: node config/scripts/run-release-mac-build-workflow.mjs
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RELEASE_MAC_BUILD_REF: ${{ github.ref_name }}
-          RELEASE_MAC_BUILD_RELEASE_RUN_ID: ${{ github.run_id }}
-          RELEASE_MAC_BUILD_TAG: ${{ needs.cut.outputs.tag }}
-          RELEASE_MAC_BUILD_WORKFLOW: release-mac-build.yml
-
   publish-release:
     needs:
       - cut
       - build
-      - build-mac
       - terminal-rendering-golden
     runs-on: ubuntu-latest
     permissions:
