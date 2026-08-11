@@ -14,7 +14,7 @@
 </p>
 
 <p align="center">
-  <img src="docs/assets/readme-hero.jpg" alt="ImogenAI desktop app running agents in parallel workspaces" width="960" />
+  <img src="docs/assets/readme-hero.png" alt="ImogenAI desktop and mobile apps running agents in parallel workspaces" width="960" />
 </p>
 
 ## Features
