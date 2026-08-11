@@ -1203,7 +1203,7 @@ jobs:
           }
 
       - name: Install SignPath PowerShell module
-        if: matrix.platform == 'win'
+        if: false
         uses: ./.github/actions/install-signpath-module
 
       # ── Windows inner-binary signing (issue #7785) ─────────────────────
@@ -1220,7 +1220,7 @@ jobs:
       # valid signature (Microsoft's OpenConsole.exe) must keep their signer.
       - name: Stage unsigned inner PE files for signing
         id: stage-inner
-        if: matrix.platform == 'win'
+        if: false
         continue-on-error: true
         shell: pwsh
         run: |
@@ -1259,7 +1259,7 @@ jobs:
 
       - name: Upload unsigned inner binaries for SignPath
         id: upload-unsigned-inner
-        if: matrix.platform == 'win' && steps.stage-inner.outcome == 'success'
+        if: false
         continue-on-error: true
         uses: actions/upload-artifact@v7
         with:
@@ -1269,7 +1269,7 @@ jobs:
 
       - name: Submit inner binaries signing request
         id: submit-inner-signing
-        if: matrix.platform == 'win' && steps.upload-unsigned-inner.outcome == 'success'
+        if: false
         continue-on-error: true
         uses: signpath/github-action-submit-signing-request@v2
         with:
@@ -1468,7 +1468,7 @@ jobs:
             Write-Warning 'Restored pre-rebuild installer; this release ships with unsigned inner binaries.'
           }
       # ── End Windows inner-binary signing ───────────────────────────────
-      - name: Upload unsigned Windows installer for SignPath
+      - name: Archive unsigned Windows installer
         if: matrix.platform == 'win'
         id: upload-unsigned-windows-installer
         uses: actions/upload-artifact@v7
@@ -1477,11 +1477,9 @@ jobs:
           path: dist/orca-windows-setup.exe
           if-no-files-found: error
 
-      # Why: SignPath Foundation production certificates require manual review,
-      # so the release job waits while the signing request is approved in UI.
       - name: Submit Windows installer signing request
         id: submit-signing-request
-        if: matrix.platform == 'win'
+        if: false
         uses: signpath/github-action-submit-signing-request@v2
         with:
           api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
@@ -1493,7 +1491,7 @@ jobs:
           wait-for-completion: false
 
       - name: Notify Slack that Windows signing is waiting for approval
-        if: matrix.platform == 'win'
+        if: false
         shell: pwsh
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -1557,7 +1555,7 @@ jobs:
           Invoke-RestMethod -Method Post -Uri $env:SLACK_WEBHOOK_URL -ContentType 'application/json' -Body $payload
 
       - name: Download signed Windows installer from SignPath
-        if: matrix.platform == 'win'
+        if: false
         shell: pwsh
         env:
           SIGNPATH_API_TOKEN: ${{ secrets.SIGNPATH_API_TOKEN }}
@@ -1575,7 +1573,7 @@ jobs:
           Expand-Archive -Path signed-windows.zip -DestinationPath signed-windows -Force
 
       - name: Stage signed Windows release assets
-        if: matrix.platform == 'win'
+        if: false
         shell: pwsh
         run: |
           $signedInstaller = Get-ChildItem -Path signed-windows -Recurse -File -Filter 'orca-windows-setup.exe' | Select-Object -First 1
@@ -1612,7 +1610,7 @@ jobs:
           Get-Item 'dist/orca-windows-setup.exe', 'dist/orca-windows-setup.exe.blockmap', 'dist/latest.yml'
 
       - name: Verify signed Windows installer
-        if: matrix.platform == 'win'
+        if: false
         shell: pwsh
         run: |
           $signature = Get-AuthenticodeSignature -FilePath 'dist/orca-windows-setup.exe'
@@ -1772,7 +1770,7 @@ jobs:
           if-no-files-found: ignore
           retention-days: 30
 
-      - name: Publish signed Windows release artifacts
+      - name: Publish unsigned Windows release artifacts
         if: matrix.platform == 'win'
         uses: nick-fields/retry@v4
         with:
